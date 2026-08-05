@@ -1,8 +1,8 @@
 import { Schema } from "mongoose";
 import validator from "validator";
-import bcrypt from "bcryptjs";
 import type { IUser } from "./userSchema.js";
 import type { IUserModel } from "./userModel.js";
+import { hashPassword } from "../../utils/auth.js";
 
 export const applyUserStatics = (schema: Schema<IUser, IUserModel>) : void => {
     schema.statics.login = async function (this: any, email: string, password: string): Promise<any> {
@@ -44,7 +44,7 @@ export const applyUserStatics = (schema: Schema<IUser, IUserModel>) : void => {
             throw new Error("Password not strong enough!");
         }
 
-        const hashed = await bcrypt.hash(password, 10);
+        const hashed = await hashPassword(password, 10);
 
         const user = this.create({ name, email, password: hashed });
 
