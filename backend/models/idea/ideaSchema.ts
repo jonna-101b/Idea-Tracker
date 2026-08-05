@@ -4,6 +4,7 @@ export interface IIdea {
     _id: string,
     title: string,
     description: string,
+    createdBy: string,
     createdAt: Date,
     updatedAt: Date,
 }

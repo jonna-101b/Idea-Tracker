@@ -1,5 +1,5 @@
 import { body } from "express-validator";
-import { validateResult } from "./errors.paser.js";
+import { validateResult } from "./errors.parser.js";
 
 export const signupValidator = [
     body("name")
