@@ -2,10 +2,13 @@ import mongoose from "mongoose";
 import type { IUserModel } from "./userModel.js";
 
 export interface IUser extends mongoose.Document {
+    _id: mongoose.Types.ObjectId;
     name: string;
     email: string;
     password: string;
     role: 'user' | 'admin';
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export const userSchema = new mongoose.Schema<IUser, IUserModel>({
