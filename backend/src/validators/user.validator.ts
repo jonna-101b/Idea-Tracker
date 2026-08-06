@@ -13,12 +13,16 @@ export const signupValidator = [
         .notEmpty()
         .withMessage('Email is required')
         .isEmail()
-        .withMessage('Please provide a valid email address'),
+        .withMessage('Please provide a valid email address')
+        .isLength({ max: 254 })
+        .withMessage('Email must not exceed 254 characters'),
     body("password")
         .notEmpty()
         .withMessage('Password is required')
         .isLength({ min: 6 })
-        .withMessage('Password must be at least 6 characters long'),
+        .withMessage('Password must be at least 6 characters long')
+        .isLength({ max: 128 })
+        .withMessage('Password must not exceed 128 characters'),
     validateResult
 ];
 

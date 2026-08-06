@@ -25,7 +25,7 @@ export const ideaSchema = new mongoose.Schema({
     },
     owner: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'user',
+        ref: 'User',
         required: [true, 'Owner is required'],
     },
     createdAt: {},

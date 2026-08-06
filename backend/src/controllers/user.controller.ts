@@ -4,7 +4,7 @@ import { APIError } from "../errors/APIError.js";
 
 export const getUsers = async (req: Request, res: Response, next: NextFunction) : Promise<void> => {
     try {
-        const users = await User.find({});
+        const users = await User.find({}).select('-password');
         res.status(200).json({ success: true, data: users });
     }
     catch (error) {
@@ -50,7 +50,7 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
 
 export const deleteUser = async (req: Request, res: Response, next: NextFunction) : Promise<void> => {
     try {
-        const user = await User.findByIdAndDelete(req.params.id);
+        const user = await User.findByIdAndDelete(req.params.id).select('-password');
 
         if (!user) {
             return next(APIError.notFound('User not found'));

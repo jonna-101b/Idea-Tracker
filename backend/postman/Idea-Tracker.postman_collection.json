@@ -1,0 +1,89 @@
+{
+  "info": {
+    "_postman_id": "4ea5ad54-7664-480b-a69c-baeedb84c4cf",
+    "name": "Idea Tracker API",
+    "description": "Import this collection into Postman, set `baseUrl` if needed, and run the requests in folder order. Admin requests require a token for a user whose role is already `admin` in MongoDB. The collection deliberately creates and deletes test data.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000/api" },
+    { "key": "userEmail", "value": "" },
+    { "key": "userPassword", "value": "PostmanTest1!" },
+    { "key": "veryLongPassword", "value": "Aa1!Aa1!Aa1!Aa1!Aa1!Aa1!Aa1!Aa1!Aa1!Aa1!Aa1!Aa1!Aa1!Aa1!Aa1!Aa1!Aa1!Aa1!Aa1!Aa1!Aa1!Aa1!Aa1!Aa1!Aa1!Aa1!Aa1!Aa1!Aa1!Aa1!Aa1!Aa1!Aa1!" },
+    { "key": "userToken", "value": "" },
+    { "key": "ideaId", "value": "" },
+    { "key": "outsiderToken", "value": "" },
+    { "key": "adminToken", "value": "PASTE_AN_ADMIN_BEARER_TOKEN_HERE" },
+    { "key": "adminUserId", "value": "PASTE_A_TEST_USER_ID_TO_DELETE" },
+    { "key": "adminIdeaId", "value": "PASTE_A_TEST_IDEA_ID_TO_DELETE" }
+  ],
+  "item": [
+    {
+      "name": "01 Authentication",
+      "item": [
+        {
+          "name": "Signup - valid",
+          "event": [
+            { "listen": "prerequest", "script": { "exec": ["pm.collectionVariables.set('userEmail', `postman.${Date.now()}@example.test`);"] } },
+            { "listen": "test", "script": { "exec": ["pm.test('returns 200', () => pm.response.to.have.status(200));", "const body = pm.response.json();", "pm.test('returns a token', () => pm.expect(body.token).to.be.a('string').and.not.empty;", "pm.collectionVariables.set('userToken', body.token);"] } }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Postman Test User\",\n  \"email\": \"{{userEmail}}\",\n  \"password\": \"{{userPassword}}\"\n}" },
+            "url": "{{baseUrl}}/auth/signup"
+          }
+        },
+        {
+          "name": "Signup - duplicate email",
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('rejects duplicate email', () => pm.response.to.have.status(400));"] } }],
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"name\": \"Duplicate User\",\n  \"email\": \"{{userEmail}}\",\n  \"password\": \"{{userPassword}}\"\n}" }, "url": "{{baseUrl}}/auth/signup" }
+        },
+        {
+          "name": "Signup - invalid fields",
+          "item": [
+            { "name": "Empty name", "event": [{ "listen": "test", "script": { "exec": ["pm.test('returns validation error', () => pm.response.to.have.status(400));"] } }], "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"name\": \"\", \"email\": \"empty-name@example.test\", \"password\": \"PostmanTest1!\"}" }, "url": "{{baseUrl}}/auth/signup" } },
+            { "name": "Empty email", "event": [{ "listen": "test", "script": { "exec": ["pm.test('returns validation error', () => pm.response.to.have.status(400));"] } }], "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"name\": \"Test User\", \"email\": \"\", \"password\": \"PostmanTest1!\"}" }, "url": "{{baseUrl}}/auth/signup" } },
+            { "name": "Empty password", "event": [{ "listen": "test", "script": { "exec": ["pm.test('returns validation error', () => pm.response.to.have.status(400));"] } }], "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"name\": \"Test User\", \"email\": \"empty-password@example.test\", \"password\": \"\"}" }, "url": "{{baseUrl}}/auth/signup" } },
+            { "name": "Single-character password", "event": [{ "listen": "test", "script": { "exec": ["pm.test('returns validation error', () => pm.response.to.have.status(400));"] } }], "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"name\": \"Test User\", \"email\": \"short-password@example.test\", \"password\": \"a\"}" }, "url": "{{baseUrl}}/auth/signup" } },
+            { "name": "Very long password", "event": [{ "listen": "test", "script": { "exec": ["pm.test('returns validation error', () => pm.response.to.have.status(400));"] } }], "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"name\": \"Test User\", \"email\": \"long-password@example.test\", \"password\": \"{{veryLongPassword}}\"}" }, "url": "{{baseUrl}}/auth/signup" } }
+          ]
+        },
+        {
+          "name": "Login - valid",
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('returns 200', () => pm.response.to.have.status(200));", "pm.collectionVariables.set('userToken', pm.response.json().token);"] } }],
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"email\": \"{{userEmail}}\", \"password\": \"{{userPassword}}\"}" }, "url": "{{baseUrl}}/auth/login" }
+        },
+        {
+          "name": "Login - rejects invalid credentials and missing fields",
+          "item": [
+            { "name": "Wrong email", "event": [{ "listen": "test", "script": { "exec": ["pm.test('returns 401', () => pm.response.to.have.status(401));"] } }], "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"email\": \"unknown@example.test\", \"password\": \"PostmanTest1!\"}" }, "url": "{{baseUrl}}/auth/login" } },
+            { "name": "Wrong password", "event": [{ "listen": "test", "script": { "exec": ["pm.test('returns 401', () => pm.response.to.have.status(401));"] } }], "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"email\": \"{{userEmail}}\", \"password\": \"WrongPassword1!\"}" }, "url": "{{baseUrl}}/auth/login" } },
+            { "name": "Missing fields", "event": [{ "listen": "test", "script": { "exec": ["pm.test('returns 400', () => pm.response.to.have.status(400));"] } }], "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/auth/login" } }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "02 Ideas (run in order)",
+      "item": [
+        { "name": "Create idea", "event": [{ "listen": "test", "script": { "exec": ["pm.test('returns 201', () => pm.response.to.have.status(201));", "pm.collectionVariables.set('ideaId', pm.response.json().data._id);"] } }], "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{userToken}}" }], "body": { "mode": "raw", "raw": "{\"title\": \"Postman test idea\", \"description\": \"An idea created for API integration testing.\"}" }, "url": "{{baseUrl}}/ideas" } },
+        { "name": "Update own idea", "event": [{ "listen": "test", "script": { "exec": ["pm.test('returns 200', () => pm.response.to.have.status(200));", "pm.test('updates title', () => pm.expect(pm.response.json().data.title).to.eql('Updated Postman idea'));"] } }], "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{userToken}}" }], "body": { "mode": "raw", "raw": "{\"title\": \"Updated Postman idea\", \"description\": \"An updated idea used for API integration testing.\"}" }, "url": "{{baseUrl}}/ideas/{{ideaId}}" } },
+        { "name": "Get own idea", "event": [{ "listen": "test", "script": { "exec": ["pm.test('returns 200', () => pm.response.to.have.status(200));"] } }], "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }], "url": "{{baseUrl}}/ideas/{{ideaId}}" } },
+        { "name": "Unauthorized - no token", "event": [{ "listen": "test", "script": { "exec": ["pm.test('returns 401', () => pm.response.to.have.status(401));"] } }], "request": { "method": "GET", "url": "{{baseUrl}}/ideas" } },
+        { "name": "Invalid idea ID", "event": [{ "listen": "test", "script": { "exec": ["pm.test('returns 400', () => pm.response.to.have.status(400));"] } }], "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }], "url": "{{baseUrl}}/ideas/not-a-mongo-id" } },
+        { "name": "Create second user for forbidden test", "event": [{ "listen": "prerequest", "script": { "exec": ["pm.collectionVariables.set('outsiderEmail', `outsider.${Date.now()}@example.test`);"] } }, { "listen": "test", "script": { "exec": ["pm.test('returns 200', () => pm.response.to.have.status(200));", "pm.collectionVariables.set('outsiderToken', pm.response.json().token);"] } }], "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"name\": \"Outsider User\", \"email\": \"{{outsiderEmail}}\", \"password\": \"PostmanTest1!\"}" }, "url": "{{baseUrl}}/auth/signup" } },
+        { "name": "Forbidden - other user reads idea", "event": [{ "listen": "test", "script": { "exec": ["pm.test('returns 403', () => pm.response.to.have.status(403));"] } }], "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{outsiderToken}}" }], "url": "{{baseUrl}}/ideas/{{ideaId}}" } },
+        { "name": "Delete own idea", "event": [{ "listen": "test", "script": { "exec": ["pm.test('returns 200', () => pm.response.to.have.status(200));"] } }], "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }], "url": "{{baseUrl}}/ideas/{{ideaId}}" } }
+      ]
+    },
+    {
+      "name": "03 Admin (destructive)",
+      "item": [
+        { "name": "View all users", "event": [{ "listen": "test", "script": { "exec": ["pm.test('returns 200 for an admin', () => pm.response.to.have.status(200));", "pm.test('does not expose password hashes', () => pm.expect(JSON.stringify(pm.response.json().data)).not.to.include('password'));"] } }], "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }], "url": "{{baseUrl}}/admin" } },
+        { "name": "Delete user", "event": [{ "listen": "test", "script": { "exec": ["pm.test('returns 200', () => pm.response.to.have.status(200));", "pm.test('does not expose password hash', () => pm.expect(JSON.stringify(pm.response.json().data)).not.to.include('password'));"] } }], "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }], "url": "{{baseUrl}}/admin/{{adminUserId}}" } },
+        { "name": "Delete idea", "event": [{ "listen": "test", "script": { "exec": ["pm.test('returns 200', () => pm.response.to.have.status(200));"] } }], "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }], "url": "{{baseUrl}}/ideas/{{adminIdeaId}}" } }
+      ]
+    }
+  ]
+}

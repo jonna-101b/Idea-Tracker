@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { createIdea, getIdeas, getIdeaById, updateIdea, deleteIdea } from '../controllers/idea.controller.js';
 import { authenticate } from '../middlewares/authenticate.js';
 import { authorize } from '../middlewares/authorize.js';
-import { createIdeaValidator, updateIdeaValidator } from '../validators/idea.validator.js';
+import { createIdeaValidator, ideaIdParamValidator, updateIdeaValidator } from '../validators/idea.validator.js';
 
 const router = Router();
 
@@ -16,8 +16,8 @@ router
 
 router
   .route('/:id')
-  .get(authorize, getIdeaById)
+  .get(ideaIdParamValidator, authorize, getIdeaById)
   .put(updateIdeaValidator, authorize, updateIdea)
-  .delete(authorize, deleteIdea);
+  .delete(ideaIdParamValidator, authorize, deleteIdea);
 
 export default router;

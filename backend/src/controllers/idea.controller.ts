@@ -67,6 +67,10 @@ export const updateIdea = async (req: Request, res: Response, next: NextFunction
       { new: true, runValidators: true }
     );
 
+    if (!idea) {
+      return next(APIError.notFound('Idea not found'));
+    }
+
     res.status(200).json({ success: true, data: idea });
   } catch (error) {
     next(error);
@@ -77,7 +81,10 @@ export const updateIdea = async (req: Request, res: Response, next: NextFunction
 // DELETE /api/ideas/:id - Delete idea
 export const deleteIdea = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    await Idea.findByIdAndDelete(req.params.id);
+    const idea = await Idea.findByIdAndDelete(req.params.id);
+    if (!idea) {
+      return next(APIError.notFound('Idea not found'));
+    }
     res.status(200).json({ success: true, message: 'Idea deleted successfully' });
   } catch (error) {
     next(error);

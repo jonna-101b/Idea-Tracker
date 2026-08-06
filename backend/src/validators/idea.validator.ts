@@ -32,3 +32,8 @@ export const updateIdeaValidator = [
         .withMessage('Description must be at least 5 characters long'),
     validateResult,
 ];
+
+export const ideaIdParamValidator = [
+    param('id').isMongoId().withMessage('Invalid Idea ID format'),
+    validateResult,
+];
