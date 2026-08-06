@@ -17,7 +17,7 @@ if (error) {
 }
 
 export const config = {
-    port: envVars.Port as number,
+    port: envVars.PORT as number,
     env: envVars.NODE_ENV as string,
     mongoUri: envVars.MONGO_URI as string,
     jwtSecret: envVars.JWT_SECRET as string,

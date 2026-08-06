@@ -1,9 +1,12 @@
 import type { IUserModel } from "../models/user/userModel.ts";
-import { IUser } from "../models/user/userSchema";
+import { IUser } from "../models/user/userSchema.ts";
 
 declare global {
   namespace Express {
-    interface User extends IUser, IUserModel {}
+    interface User extends IUser {}
+    interface Request extends Express.Request {
+      user?: IUser;
+    }
   }
 }
 

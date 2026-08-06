@@ -9,15 +9,15 @@ const options : StrategyOptions = {
 
 export const jwtStrategy = new Strategy(options, async (payload, done) => {
     try {
-        const user = await User.findById(payload._id);
+        const user = await User.findById(payload._id).lean().exec();
 
         if (user) {
             done(null, user)
         }
 
-        done(null, false)
+        done(null, false);
     }
     catch (error) {
-        done(error, false)
+        done(error, false);
     }
 });

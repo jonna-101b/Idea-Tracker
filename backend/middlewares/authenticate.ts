@@ -5,7 +5,7 @@ import type { IUserModel } from "../models/user/userModel.js";
 import { APIError } from "../errors/APIError.js";
 
 export const authenticate = (req: Request, res: Response, next: NextFunction) : void => {
-    passport.authenticate("jwt", { session: false }, (error: Error | null, user: IUser | IUserModel) => {
+    passport.authenticate("jwt", { session: false }, (error: Error | null, user: IUser) => {
         if (error) {
             return next(error)
         }

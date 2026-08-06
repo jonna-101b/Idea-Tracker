@@ -7,12 +7,12 @@ import { APIError } from '../errors/APIError.js';
 export const createIdea = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { title, description } = req.body;
-    const user = req.user as { role?: string; _id?: { toString(): string } };
+    // const user = req.user as { role?: string; _id?: { toString(): string } };
 
     const idea = await Idea.create({
       title,
       description,
-      createdBy: user?._id ? user._id.toString() : "",
+      createdBy: req.user?._id.toString() ?? "",
     });
 
     res.status(201).json({ success: true, data: idea });
