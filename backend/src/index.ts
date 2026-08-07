@@ -3,10 +3,12 @@ import { connectDB } from "./config/mongoose.js";
 import { config } from "./config/environments.js";
 import router from "./config/route.js";
 import { globalErrorHandler } from "./middlewares/errorHandler.js";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser())
 
 app.use("/api", router);
 

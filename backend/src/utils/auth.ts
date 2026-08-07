@@ -7,8 +7,13 @@ export interface Payload {
     role: "user" | "admin",
 }
 
-export const createToken = (payload: Payload) : string => {
-    const token = jwt.sign(payload, config.jwtSecret, { expiresIn: "1h" });
+export const generateAccessToken = (payload: Payload) : string => {
+    const token = jwt.sign(payload, config.jwtAccessSecret, { expiresIn: "15m" });
+    return token;
+}; 
+
+export const generateRefreshToken = (payload: Payload) : string => {
+    const token = jwt.sign(payload, config.jwtRefreshSecret, { expiresIn: "30d" });
     return token;
 }; 
 

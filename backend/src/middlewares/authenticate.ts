@@ -1,7 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import passport from "passport";
 import type { IUser } from "../models/user/userSchema.js";
-import type { IUserModel } from "../models/user/userModel.js";
 import { APIError } from "../errors/APIError.js";
 
 export const authenticate = (req: Request, res: Response, next: NextFunction) : void => {
