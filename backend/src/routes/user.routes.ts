@@ -1,8 +1,6 @@
 import express from "express";
-import { signupUser, loginUser } from "../controllers/auth.controller.js";
 import { authenticate } from '../middlewares/authenticate.js';
 import { restrictTo } from '../middlewares/authorize.js';
-import { signupValidator, loginValidator } from '../validators/user.validator.js';
 import { updateUserValidation, userIdParamValidation } from '../validators/adminUser.validator.js';
 import {
   getUsers,
@@ -13,10 +11,6 @@ import {
 
 
 const router = express.Router();
-
-
-router.post('/signup', signupValidator, signupUser);
-router.post('/login', loginValidator, loginUser);
 
 
 // Admin Only Routes - Protected by JWT & Restricted to 'admin'
