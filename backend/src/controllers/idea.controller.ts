@@ -85,7 +85,7 @@ export const deleteIdea = async (req: Request, res: Response, next: NextFunction
     if (!idea) {
       return next(APIError.notFound('Idea not found'));
     }
-    res.status(200).json({ success: true, message: 'Idea deleted successfully' });
+    res.status(200).json({ success: true, data: idea });
   } catch (error) {
     next(error);
   }

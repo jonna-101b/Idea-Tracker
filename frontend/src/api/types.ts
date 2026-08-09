@@ -14,8 +14,6 @@ export interface APIConfig<TParams = unknown, TData = unknown> {
     params?: TParams;
     pathParams?: Record<string, string | number>;
     data?: TData;
-    headers?: Record<string, string>;
-    withCredentials: boolean;
 }
 
 export interface TAPIError {

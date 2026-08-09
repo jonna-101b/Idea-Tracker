@@ -9,7 +9,7 @@ export const APIRoutes = {
     refreshToken: { path: '/auth/refresh', method: 'POST' } as APIRoute,
 
     //admin
-    getAllUsers: { path: '/admin', method: 'GET' } as APIRoute,
+    getUsers: { path: '/admin', method: 'GET' } as APIRoute,
     editUser: { path: '/admin/:id', method: 'PUT' } as APIRoute,
     deleteUser: { path: '/admin/:id', method: 'DELETE' } as APIRoute,
 

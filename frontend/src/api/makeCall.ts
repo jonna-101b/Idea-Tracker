@@ -13,7 +13,7 @@ const axiosInstance = axios.create({
 });
 
 export const makeCall = async <TParams = unknown, TData = unknown, TResponse = unknown>(config: APIConfig<TParams, TData>) => {
-    const { route, params, pathParams, data, headers } = config;
+    const { route, params, pathParams, data } = config;
 
     let url = route.path;
 
@@ -29,7 +29,6 @@ export const makeCall = async <TParams = unknown, TData = unknown, TResponse = u
             method: route.method,
             data: data,
             params: params,
-            headers: headers,
         });
         return response.data;
     }

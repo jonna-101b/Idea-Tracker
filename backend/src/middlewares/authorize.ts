@@ -1,11 +1,12 @@
 import type { Request, Response, NextFunction } from 'express';
 import { APIError } from '../errors/APIError.js';
 import Idea from '../models/idea/ideaModel.js';
+import type { IUser } from '../models/user/userSchema.js';
 
 
 export const restrictTo = (...roles: string[]) => {
   return (req: Request, res: Response, next: NextFunction): void => {
-      const user = req.user as { role?: string } | undefined;
+      const user = req.user as IUser;
 
       if (!user || !user.role || !roles.includes(user.role)) {
         return next(APIError.forbidden('You do not have permission to perform this action'));
@@ -17,7 +18,7 @@ export const restrictTo = (...roles: string[]) => {
 export const authorize = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const idea = await Idea.findById(req.params.id);
-      const user = req.user as { role?: string; _id?: { toString(): string } } | undefined;
+      const user = req.user as IUser;
 
       if (!idea) {
         return next(APIError.notFound('Idea not found'));

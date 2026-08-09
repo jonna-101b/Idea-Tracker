@@ -21,7 +21,7 @@ export const signupUser = async (req: Request, res: Response, next: NextFunction
 
         res.cookie("accessToken", accessToken, { ...cookieOptions, maxAge: 15 * 60 * 1000 }); // 15 minutes
         res.cookie("refreshToken", refreshToken, { ...cookieOptions, maxAge: 30 * 24 * 60 * 60 * 1000 }); // 30 days
-        return res.status(200).json(user.toJSON());
+        return res.status(200).json(user);
     }
     catch (error) {
         next(error)

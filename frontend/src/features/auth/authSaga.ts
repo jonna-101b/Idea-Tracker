@@ -3,12 +3,13 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { authFailure, authSuccess, login, logout, logoutSuccess, signup, type User } from "./authSlice";
 import { makeCall } from "../../api/makeCall";
 import { APIRoutes } from "../../api/APIRoutes";
+import type { APIConfig } from "../../api/types";
 
 function* handleSignup(action: PayloadAction<Parameters<typeof signup >[0]>) : Generator {
     try {
-        const config = { route: APIRoutes.signup, data: action.payload, withCredentials: true };
-        const res: any = yield call(makeCall, config);
-        yield put(authSuccess(res.data.user as User))
+        const config : APIConfig = { route: APIRoutes.signup, data: action.payload };
+        const res: User = yield call(makeCall, config);
+        yield put(authSuccess(res))
     }
     catch (error: any) {
         const msg = error.response?.data?.message || 'Login failed';
@@ -18,9 +19,9 @@ function* handleSignup(action: PayloadAction<Parameters<typeof signup >[0]>) : G
 
 function* handleLogin(action: PayloadAction<Parameters<typeof login>[0]>) : Generator {
     try {
-        const config = { route: APIRoutes.login, data: action.payload, withCredentials: true };
-        const res : any = yield call(makeCall, config);
-        yield put(authSuccess(res.data.user))
+        const config : APIConfig = { route: APIRoutes.login, data: action.payload };
+        const res : User = yield call(makeCall, config);
+        yield put(authSuccess(res))
     }
     catch (error: any) {
         const msg = error.response?.data?.message || 'Login failed';
@@ -30,7 +31,7 @@ function* handleLogin(action: PayloadAction<Parameters<typeof login>[0]>) : Gene
 
 function* handleLogout() {
     try {
-        const config = { route: APIRoutes.logout, withCredentials: true };
+        const config : APIConfig = { route: APIRoutes.logout };
         yield call(makeCall, config);
     }
     catch (error: any) {
