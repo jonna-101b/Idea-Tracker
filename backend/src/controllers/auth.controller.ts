@@ -30,6 +30,7 @@ export const signupUser = async (req: Request, res: Response, next: NextFunction
 
 export const loginUser = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body;
+    console.log("Login request received with email:", email); // Debugging line
 
     try{
         const user = await User.login( email, password );

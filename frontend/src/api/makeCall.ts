@@ -5,7 +5,7 @@ import { APIError } from './APIError';
 
 
 const axiosInstance = axios.create({
-    baseURL: "",
+    baseURL: "http://localhost:5000/api",
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json',
@@ -30,6 +30,7 @@ export const makeCall = async <TParams = unknown, TData = unknown, TResponse = u
             data: data,
             params: params,
         });
+        console.log('API Response:', response.data); // Log the response data for debugging
         return response.data;
     }
     catch (error) {

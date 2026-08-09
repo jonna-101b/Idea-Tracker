@@ -1,6 +1,7 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { authFailure, authSuccess, login, logout, logoutSuccess, signup, type User } from "./authSlice";
+import { authFailure, authSuccess, login, logout, logoutSuccess, signup } from "./authSlice";
+import type { User } from '../../models/user.model';
 import { makeCall } from "../../api/makeCall";
 import { APIRoutes } from "../../api/APIRoutes";
 import type { APIConfig } from "../../api/types";
@@ -38,7 +39,7 @@ function* handleLogout() {
         // Handle server error
     }
     finally {
-        yield put(logoutSuccess)
+        yield put(logoutSuccess())
     }
 }
 
