@@ -17,7 +17,25 @@ const SignupPage = () => {
   const { loading, error } = useSelector((state: RootState) => state.auth);
   const { register, handleSubmit, formState: { errors } } = useForm<SignupFormData>({ resolver: zodResolver(signupSchema) });
 
-  return <Auth title="Sign Up" subtitle="Sign up, create a workspace for your ideas." fields={fields} submitLabel="Sign Up" alternateText="Already have an account?" alternateLabel="Sign in" alternateTo="/login" onSubmit={handleSubmit((values) => dispatch(signup(values)))} register={(name) => register(name as keyof SignupFormData)} errors={errors} loading={loading} error={error} />;
+  const title = "Sign Up"
+  const subTitle = "Sign up, create a workspace for your ideas.";
+  const alternateText = "Already have an account?";
+  const onSubmit = handleSubmit((values) => dispatch(signup(values)));
+
+  return <Auth 
+        title={title} 
+        subtitle={subTitle} 
+        fields={fields} 
+        submitLabel={title} 
+        alternateText={alternateText} 
+        alternateLabel="Sign in" 
+        alternateTo="/login" 
+        onSubmit={onSubmit} 
+        register={(name) => register(name as keyof SignupFormData)} 
+        errors={errors} 
+        loading={loading} 
+        error={error} 
+  />;
 };
 
 export default SignupPage;

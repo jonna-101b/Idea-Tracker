@@ -16,7 +16,23 @@ const LoginPage = () => {
   const { loading, error } = useSelector((state: RootState) => state.auth);
   const { register, handleSubmit, formState: { errors } } = useForm<LoginFormData>({ resolver: zodResolver(loginSchema) });
 
-  return <Auth title="Sign In" subtitle="Sign in to your productivity workspace." fields={fields} submitLabel="Sign In" alternateText="Don't have an account?" alternateLabel="Sign up" alternateTo="/signup" onSubmit={handleSubmit((values) => dispatch(login(values)))} register={(name) => register(name as keyof LoginFormData)} errors={errors} loading={loading} error={error} />;
+  const title = "Sign In"
+  const subTitle = "Sign in to your productivity workspace.";
+  const alternateText = "Don't have an account?";
+  const onSubmit = handleSubmit((values) => dispatch(login(values)));
+
+  return <Auth 
+        title={title} 
+        subtitle={subTitle} 
+        fields={fields} 
+        submitLabel={title} 
+        alternateText={alternateText} 
+        alternateLabel="Sign up" 
+        alternateTo="/signup" 
+        onSubmit={onSubmit} 
+        register={(name) => register(name as keyof LoginFormData)} 
+        errors={errors} loading={loading} error={error} 
+  />;
 };
 
 export default LoginPage;

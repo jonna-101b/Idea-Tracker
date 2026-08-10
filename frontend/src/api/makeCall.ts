@@ -30,7 +30,6 @@ export const makeCall = async <TParams = unknown, TData = unknown, TResponse = u
             data: data,
             params: params,
         });
-        console.log('API Response:', response.data); // Log the response data for debugging
         return response.data;
     }
     catch (error) {
