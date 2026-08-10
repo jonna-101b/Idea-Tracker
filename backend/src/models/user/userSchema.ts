@@ -6,8 +6,8 @@ export interface IUser extends mongoose.Document {
     email: string;
     password: string;
     role: 'user' | 'admin';
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
 export const userSchema = new mongoose.Schema<IUser, IUserModel>({

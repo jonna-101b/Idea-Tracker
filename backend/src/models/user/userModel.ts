@@ -5,7 +5,7 @@ import type { IUser } from "./userSchema.js";
 import { applyUserStatics } from "./userStatics.js";
 
 export interface IUserModel extends mongoose.Model<IUser> {
-    _id: mongoose.Types.ObjectId;
+    _id?: mongoose.Types.ObjectId;
     signup(name: string, email: string, password: string): Promise<IUser>;
     login(email: string, password: string): Promise<IUser>;
 }

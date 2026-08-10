@@ -1,7 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
 import Idea from '../models/idea/ideaModel.js';
 import { APIError } from '../errors/APIError.js'; 
-import type { IUserModel } from '../models/user/userModel.js';
 import type { IUser } from "../models/user/userSchema.js";
 
 
@@ -9,7 +8,7 @@ import type { IUser } from "../models/user/userSchema.js";
 export const createIdea = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { title, description } = req.body;
-      const user = req.user as IUserModel | IUser;
+      const user = req.user as IUser;
 
       const idea = await Idea.create({
         title,
