@@ -6,6 +6,7 @@ import MainLayout from '../layouts/MainLayout';
 import LoginPage from '../pages/LoginPage';
 import SignupPage from '../pages/SignupPage';
 import IdeasPage from '../pages/ideasPage';
+import UserManagementPage from '../pages/UserManagementPage';
 
 
 const AppRoute = () => {
@@ -23,7 +24,7 @@ const AppRoute = () => {
 
                         <Route element={<AdminRoute />}>
                             <Route path="/admin/dashboard" element={<Navigate to="/ideas" replace />} />
-                            <Route path="/admin/users" element={<Navigate to="/ideas" replace />} />
+                            <Route path="/admin/users" element={<UserManagementPage />} />
                         </Route>
                     </Route>
 
