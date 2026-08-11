@@ -7,6 +7,7 @@ import LoginPage from '../pages/LoginPage';
 import SignupPage from '../pages/SignupPage';
 import IdeasPage from '../pages/ideasPage';
 import UserManagementPage from '../pages/UserManagementPage';
+import DashboardPage from '../pages/DashboardPage';
 
 
 const AppRoute = () => {
@@ -23,7 +24,7 @@ const AppRoute = () => {
                         <Route path="/ideas" element={<IdeasPage />} />
 
                         <Route element={<AdminRoute />}>
-                            <Route path="/admin/dashboard" element={<Navigate to="/ideas" replace />} />
+                            <Route path="/admin/dashboard" element={<DashboardPage />} />
                             <Route path="/admin/users" element={<UserManagementPage />} />
                         </Route>
                     </Route>

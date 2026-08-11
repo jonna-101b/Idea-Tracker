@@ -2,6 +2,7 @@ import Box from '@mui/material/Box';
 import { useSelector } from 'react-redux';
 import { Navigate, Outlet } from 'react-router-dom';
 import type { RootState } from '../store';
+import SessionLoading from '../components/SessionLoading';
 
 
 const Layout = () => (
@@ -22,7 +23,11 @@ const Layout = () => (
 );
 
 const AuthLayout = () => {
-    const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+    const { isAuthenticated, isSessionChecked } = useSelector((state: RootState) => state.auth);
+
+    if (!isSessionChecked) {
+        return <SessionLoading />;
+    }
 
     return isAuthenticated ?  <Navigate to="/ideas" replace /> : <Layout />;
 };
