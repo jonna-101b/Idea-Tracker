@@ -1,6 +1,6 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { authFailure, authSuccess, login, logout, logoutSuccess, signup } from "./authSlice";
+import { authFailure, authSuccess, checkSession, login, logout, logoutSuccess, sessionCheckFailed, signup } from "./authSlice";
 import type { User } from '../../models/user.model';
 import { makeCall } from "../../api/makeCall";
 import { APIRoutes } from "../../api/APIRoutes";
@@ -35,7 +35,7 @@ function* handleLogout() {
         const config : APIConfig = { route: APIRoutes.logout };
         yield call(makeCall, config);
     }
-    catch (error: any) {
+    catch {
         // Handle server error
     }
     finally {
@@ -43,8 +43,21 @@ function* handleLogout() {
     }
 }
 
+function* handleCheckSession(): Generator {
+    try {
+        // The browser attaches the HttpOnly access-token cookie. If it has expired,
+        // the Axios interceptor refreshes it and retries this request once.
+        const config: APIConfig = { route: APIRoutes.getProfile };
+        const res: User = yield call(makeCall, config);
+        yield put(authSuccess(res));
+    } catch {
+        yield put(sessionCheckFailed());
+    }
+}
+
 export default function* watchAuthSagas() {
     yield takeLatest(signup.type, handleSignup);
     yield takeLatest(login.type, handleLogin);
     yield takeLatest(logout.type, handleLogout);
+    yield takeLatest(checkSession.type, handleCheckSession);
 }

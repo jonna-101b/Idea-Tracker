@@ -1,16 +1,9 @@
 import axios, { AxiosError } from 'axios';
+import axiosInstance from './AxiosInstance';
 import type { APIConfig } from './types';
 import { errorCodes } from './errorCodes';
 import { APIError } from './APIError';
 
-
-const axiosInstance = axios.create({
-    baseURL: "http://localhost:5000/api",
-    withCredentials: true,
-    headers: {
-        'Content-Type': 'application/json',
-    },
-});
 
 export const makeCall = async <TParams = unknown, TData = unknown, TResponse = unknown>(config: APIConfig<TParams, TData>) => {
     const { route, params, pathParams, data } = config;
